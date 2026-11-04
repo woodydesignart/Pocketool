@@ -141,11 +141,11 @@
     .mat-table td:first-child, .mat-table th:first-child { text-align: left; }
     .mat-table input { margin-bottom: 0; }
 
-    .note-card, .maint-card, .project-card {
+    .note-card, .project-card {
       cursor: pointer;
       transition: border-color 0.2s;
     }
-    .note-card:hover, .maint-card:hover, .project-card:hover {
+    .note-card:hover, .project-card:hover {
       border-color: var(--accent);
     }
 
@@ -284,33 +284,19 @@
         <div class="main-content">
           <h2>Manutenzione Macchinari</h2>
           
-          <button class="btn-main" id="new-maint-btn" onclick="toggleMaintForm()">+ Registra Manutenzione</button>
+          <!-- Pulsante in prima posizione per aggiungere un nuovo macchinario personalizzato -->
+          <button class="btn-main" id="add-machine-btn" onclick="toggleAddMachineForm()">+ Aggiungi Nuovo Macchinario</button>
 
-          <!-- Form Inserimento/Modifica Manutenzione -->
-          <div id="maint-form" class="card" style="display:none;">
-            <h3 id="maint-form-title">Nuovo Intervento</h3>
-            <input type="hidden" id="m-id" value="">
-            
-            <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 4px;">Macchinario:</label>
-            <select id="m-machine" onchange="checkMaintCustomMachine(this.value)">
-              <option value="Altro">Altro (Inserisci manualmente...)</option>
-              <option value="Stampante 3D">Stampante 3D</option>
-              <option value="Laser">Laser</option>
-            </select>
-            <input type="text" id="m-custom-machine" placeholder="Nome macchinario personalizzato..." style="display:block;">
-
-            <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 4px;">Data:</label>
-            <input type="date" id="m-date">
-
-            <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 4px;">Cosa è stato fatto / Intervento:</label>
-            <textarea id="m-desc" placeholder="Es. Sostituito ugello, pulizia ottiche, lubrificazione guide..." rows="3"></textarea>
-
-            <button class="btn-main" onclick="saveMaintenance()">Salva Intervento</button>
-            <button type="button" onclick="hideMaintForm()" style="background:#444;">Annulla</button>
+          <!-- Form di aggiunta macchinario -->
+          <div id="add-machine-form" class="card" style="display:none;">
+            <h3>Aggiungi Macchinario</h3>
+            <input type="text" id="new-machine-name" placeholder="Nome Macchinario (es. Troncatrice, CNC Custom...)">
+            <button class="btn-main" onclick="addNewMachine()">Salva Macchinario</button>
+            <button type="button" onclick="hideAddMachineForm()" style="background:#444;">Annulla</button>
           </div>
 
-          <!-- Contenitore Storico Manutenzioni -->
-          <div id="maint-container"></div>
+          <!-- Contenitore delle schede macchinari -->
+          <div id="machines-container"></div>
         </div>
 
         <div class="maker-footer">
@@ -523,7 +509,7 @@
 
     const slider = document.getElementById('slider');
     let currentSlide = 0;
-    const totalSlides = 5; // Aggiornato a 5 sezioni
+    const totalSlides = 5;
 
     slider.addEventListener('scroll', () => {
       const index = Math.round(slider.scrollLeft / window.innerWidth);
@@ -548,134 +534,164 @@
       updateNavActiveState();
     }
 
-    // --- MANUTENZIONE ---
-    let maintenanceList = [];
+    // --- MANUTENZIONE MACCHINARI ---
+    const defaultMachines = ["Stampante 3D", "Laser", "CNC"];
+    let customMachines = [];
     try {
-      maintenanceList = JSON.parse(localStorage.getItem('maker_maintenance')) || [];
+      customMachines = JSON.parse(localStorage.getItem('maker_custom_machines')) || [];
     } catch(e) {
-      maintenanceList = [];
+      customMachines = [];
     }
 
-    function toggleMaintForm() {
-      const form = document.getElementById('maint-form');
+    let maintenanceRecords = [];
+    try {
+      maintenanceRecords = JSON.parse(localStorage.getItem('maker_maint_records')) || [];
+    } catch(e) {
+      maintenanceRecords = [];
+    }
+
+    function toggleAddMachineForm() {
+      const form = document.getElementById('add-machine-form');
       if (form.style.display === 'none') {
-        document.getElementById('maint-form-title').innerText = "Nuovo Intervento";
-        document.getElementById('m-id').value = '';
-        document.getElementById('m-machine').value = 'Altro'; // Di default imposta "Altro" in cima per la digitazione manuale
-        document.getElementById('m-custom-machine').value = '';
-        document.getElementById('m-custom-machine').style.display = 'block';
-        
-        // Imposta la data odierna di default
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('m-date').value = today;
-        document.getElementById('m-desc').value = '';
-
+        document.getElementById('new-machine-name').value = '';
         form.style.display = 'block';
-        document.getElementById('new-maint-btn').style.display = 'none';
+        document.getElementById('add-machine-btn').style.display = 'none';
       } else {
-        hideMaintForm();
+        hideAddMachineForm();
       }
     }
 
-    function hideMaintForm() {
-      document.getElementById('maint-form').style.display = 'none';
-      document.getElementById('new-maint-btn').style.display = 'block';
+    function hideAddMachineForm() {
+      document.getElementById('add-machine-form').style.display = 'none';
+      document.getElementById('add-machine-btn').style.display = 'block';
     }
 
-    function checkMaintCustomMachine(val) {
-      document.getElementById('m-custom-machine').style.display = val === 'Altro' ? 'block' : 'none';
-    }
+    function addNewMachine() {
+      const name = document.getElementById('new-machine-name').value.trim();
+      if(!name) return alert('Inserisci il nome del macchinario');
 
-    function saveMaintenance() {
-      const id = document.getElementById('m-id').value;
-      let machine = document.getElementById('m-machine').value;
-      const customMachine = document.getElementById('m-custom-machine').value;
-      const date = document.getElementById('m-date').value;
-      const desc = document.getElementById('m-desc').value;
-
-      if(machine === 'Altro') {
-        if(!customMachine) return alert('Inserisci il nome del macchinario');
-        machine = customMachine;
+      const all = [...defaultMachines, ...customMachines];
+      if(all.some(m => m.toLowerCase() === name.toLowerCase())) {
+        return alert('Questo macchinario esiste già');
       }
 
-      if(!date || !desc) return alert('Inserisci data e descrizione dell\'intervento');
+      customMachines.push(name);
+      localStorage.setItem('maker_custom_machines', JSON.stringify(customMachines));
+      hideAddMachineForm();
+      renderMaintenanceSection();
+    }
 
-      if (id) {
-        maintenanceList = maintenanceList.map(m => m.id == id ? { id: Number(id), machine, date, desc } : m);
+    function deleteCustomMachine(machineName) {
+      if(confirm(`Vuoi rimuovere il macchinario "${machineName}" e la sua cronologia?`)) {
+        customMachines = customMachines.filter(m => m !== machineName);
+        localStorage.setItem('maker_custom_machines', JSON.stringify(customMachines));
+        
+        maintenanceRecords = maintenanceRecords.filter(r => r.machine !== machineName);
+        localStorage.setItem('maker_maint_records', JSON.stringify(maintenanceRecords));
+
+        renderMaintenanceSection();
+      }
+    }
+
+    function toggleAddEntryForm(machineName) {
+      const form = document.getElementById(`entry-form-${slugify(machineName)}`);
+      if(form.style.display === 'none') {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById(`entry-date-${slugify(machineName)}`).value = today;
+        document.getElementById(`entry-desc-${slugify(machineName)}`).value = '';
+        form.style.display = 'block';
       } else {
-        maintenanceList.push({ id: Date.now(), machine, date, desc });
-      }
-
-      // Ordina per data decrescente (dalla più recente)
-      maintenanceList.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      localStorage.setItem('maker_maintenance', JSON.stringify(maintenanceList));
-      hideMaintForm();
-      renderMaintenance();
-    }
-
-    function editMaintenance(id) {
-      const m = maintenanceList.find(item => item.id == id);
-      if(!m) return;
-
-      document.getElementById('maint-form-title').innerText = "Modifica Intervento";
-      document.getElementById('m-id').value = m.id;
-      
-      const selectMach = document.getElementById('m-machine');
-      const standardMachs = ['Stampante 3D', 'Laser'];
-      
-      if(standardMachs.includes(m.machine)) {
-        selectMach.value = m.machine;
-        document.getElementById('m-custom-machine').style.display = 'none';
-        document.getElementById('m-custom-machine').value = '';
-      } else {
-        selectMach.value = 'Altro';
-        document.getElementById('m-custom-machine').style.display = 'block';
-        document.getElementById('m-custom-machine').value = m.machine;
-      }
-
-      document.getElementById('m-date').value = m.date;
-      document.getElementById('m-desc').value = m.desc;
-
-      document.getElementById('maint-form').style.display = 'block';
-      document.getElementById('new-maint-btn').style.display = 'none';
-      document.getElementById('slide-2').scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function deleteMaintenance(id) {
-      if(confirm('Vuoi rimuovere questo record di manutenzione?')) {
-        maintenanceList = maintenanceList.filter(m => m.id !== id);
-        localStorage.setItem('maker_maintenance', JSON.stringify(maintenanceList));
-        renderMaintenance();
-        hideMaintForm();
+        form.style.display = 'none';
       }
     }
 
-    function renderMaintenance() {
-      const container = document.getElementById('maint-container');
+    function addMaintRecord(machineName) {
+      const date = document.getElementById(`entry-date-${slugify(machineName)}`).value;
+      const desc = document.getElementById(`entry-desc-${slugify(machineName)}`).value.trim();
+
+      if(!date || !desc) return alert('Inserisci sia la data che la descrizione');
+
+      maintenanceRecords.push({ id: Date.now(), machine: machineName, date, desc });
+      maintenanceRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      localStorage.setItem('maker_maint_records', JSON.stringify(maintenanceRecords));
+      renderMaintenanceSection();
+    }
+
+    function deleteMaintRecord(id) {
+      if(confirm('Vuoi davvero rimuovere questa manutenzione?')) {
+        maintenanceRecords = maintenanceRecords.filter(r => r.id !== id);
+        localStorage.setItem('maker_maint_records', JSON.stringify(maintenanceRecords));
+        renderMaintenanceSection();
+      }
+    }
+
+    function slugify(text) {
+      return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+    }
+
+    function renderMaintenanceSection() {
+      const container = document.getElementById('machines-container');
       if(!container) return;
       container.innerHTML = '';
 
-      if(maintenanceList.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-dim); text-align:center; margin-top:20px;">Nessuna manutenzione registrata.</p>';
-        return;
-      }
+      const allMachines = [...defaultMachines, ...customMachines];
 
-      maintenanceList.forEach(m => {
+      allMachines.forEach(mach => {
+        const isCustom = !defaultMachines.includes(mach);
+        const machRecords = maintenanceRecords.filter(r => r.machine === mach);
+
         const card = document.createElement('div');
-        card.className = 'card maint-card';
+        card.className = 'card';
+
+        let recordsHtml = '';
+        if(machRecords.length === 0) {
+          recordsHtml = `<p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:10px;">Nessuna manutenzione registrata.</p>`;
+        } else {
+          recordsHtml = `
+            <table class="mat-table">
+              <thead>
+                <tr>
+                  <th style="width: 90px;">Data</th>
+                  <th>Intervento / Note</th>
+                  <th style="width: 35px;"></th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+          machRecords.forEach(r => {
+            recordsHtml += `
+              <tr>
+                <td style="font-size:0.75rem; color:var(--accent); font-weight:bold;">${r.date}</td>
+                <td style="text-align:left; font-size:0.85rem; white-space:pre-wrap;">${r.desc}</td>
+                <td><button type="button" onclick="deleteMaintRecord(${r.id})" style="background:none; border:none; color:#ff4d4d; padding:2px; cursor:pointer;">✕</button></td>
+              </tr>
+            `;
+          });
+          recordsHtml += `</tbody></table>`;
+        }
+
+        const slug = slugify(mach);
+
         card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <h3 style="margin-bottom:0; color:var(--accent);">${m.machine}</h3>
-            <span style="font-size:0.75rem; color:var(--text-dim); background:#252525; padding:2px 6px; border-radius:4px;">📅 ${m.date}</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="margin-bottom:0; color:var(--accent); font-size:1.1rem;">🛠️ ${mach}</h3>
+            <div>
+              <button type="button" onclick="toggleAddEntryForm('${mach}')" style="width:auto; background:#333; padding:4px 8px; font-size:0.8rem; margin-bottom:0;">+ Aggiungi Intervento</button>
+              ${isCustom ? `<button type="button" onclick="deleteCustomMachine('${mach}')" style="width:auto; background:none; border:none; color:#ff4d4d; padding:4px 6px; font-size:0.85rem; cursor:pointer;" title="Elimina Macchinario">🗑️</button>` : ''}
+            </div>
           </div>
-          <p style="color:var(--text); font-size:0.85rem; white-space: pre-wrap; margin-top:6px; margin-bottom:8px;">${m.desc}</p>
-          <div style="display:flex; justify-content:flex-end; gap:6px;">
-            <button type="button" onclick="event.stopPropagation(); editMaintenance(${m.id})" style="width:auto; background:#333; padding:3px 8px; font-size:0.75rem;">Modifica</button>
-            <button type="button" onclick="event.stopPropagation(); deleteMaintenance(${m.id})" style="width:auto; background:none; border:none; color:#ff4d4d; padding:3px; font-size:0.85rem; cursor:pointer;">🗑️</button>
+
+          <div id="entry-form-${slug}" style="display:none; background:#252525; padding:10px; border-radius:5px; margin-bottom:10px; border:1px solid #333;">
+            <label style="font-size:0.75rem; color:var(--text-dim);">Data Intervento:</label>
+            <input type="date" id="entry-date-${slug}">
+            <textarea id="entry-desc-${slug}" placeholder="Cosa hai fatto? (es. pulizia lenti, ingrassaggio guide, cambio ugello...)" rows="2"></textarea>
+            <button class="btn-main" onclick="addMaintRecord('${mach}')" style="margin-bottom:0;">Registra</button>
           </div>
+
+          ${recordsHtml}
         `;
-        card.onclick = () => editMaintenance(m.id);
+
         container.appendChild(card);
       });
     }
@@ -1012,7 +1028,7 @@
     // Inizializzazione completa
     renderProjects();
     renderNotes();
-    renderMaintenance();
+    renderMaintenanceSection();
     renderTools();
     updateCategoryDropdown();
     updateNavActiveState();
