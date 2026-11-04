@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pocketool-v17'; // Incrementa SEMPRE questo numero ad ogni modifica
+const CACHE_NAME = 'pocketool-v18'; // Incrementa SEMPRE questo numero ad ogni modifica
 const ASSETS = [
   './',
   './index.html',
