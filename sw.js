@@ -1,40 +1,38 @@
-const CACHE_NAME = 'pocketool-v11'; // Incrementi questo a ogni modifica
-const urlsToCache = [
+const CACHE_NAME = 'pocketool-v17'; // Incrementa SEMPRE questo numero ad ogni modifica
+const ASSETS = [
   './',
   './index.html',
   './manifest.json'
 ];
 
-// Installazione: forza l'attivazione immediata
-self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+// 1. Installazione e caching immediato
+self.addEventListener('install', (e) => {
+  self.skipWaiting(); // Forza il nuovo Service Worker a diventare attivo subito
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
   );
 });
 
-// Attivazione: prende subito il controllo dei client aperti
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
+// 2. Cancellazione delle vecchie cache all'attivazione
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName); // Cancella le vecchie cache obsolete
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key); // Cancella la vecchia cache v16, v15, ecc.
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()) // Prende subito il controllo della pagina
   );
 });
 
-// Fetch: serve i file dalla cache o dalla rete
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request);
-      })
+// 3. Risposta: prova la rete, se fallisce (offline) usa la cache
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
   );
 });
