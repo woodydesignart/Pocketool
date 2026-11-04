@@ -36,49 +36,66 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding-top: 6px;
+      padding: 6px 15px 0 15px;
     }
 
     .brand-logo {
       font-size: 1.4rem;
       font-weight: 700;
       letter-spacing: -0.5px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       user-select: none;
     }
 
     .brand-logo .p-white { color: #ffffff; }
     .brand-logo .p-orange { color: var(--accent); }
 
-    .nav-bar {
+    /* Navigazione Desktop */
+    .nav-bar-desktop {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      gap: 12px;
-      overflow-x: auto;
+      justify-content: center;
+      gap: 15px;
       max-width: 100%;
-      padding: 0 15px;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
     }
-    .nav-bar::-webkit-scrollbar { display: none; }
 
     .nav-item {
       color: var(--text-dim);
       font-weight: bold;
       font-size: 0.85rem;
-      padding: 4px 2px;
+      padding: 4px 6px;
       border-bottom: 2px solid transparent;
       cursor: pointer;
       transition: all 0.2s ease;
       user-select: none;
       white-space: nowrap;
-      flex-shrink: 0;
     }
 
     .nav-item.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
+    }
+
+    /* Menu a Tendina Mobile */
+    .nav-select-mobile {
+      display: none;
+      width: 100%;
+      max-width: 280px;
+      padding: 6px 10px;
+      background: #2a2a2a;
+      color: var(--accent);
+      font-weight: bold;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 0.9rem;
+      text-align: center;
+      outline: none;
+    }
+
+    /* Switch da pulsanti a tendina per schermi mobile */
+    @media (max-width: 600px) {
+      .nav-bar-desktop { display: none; }
+      .nav-select-mobile { display: block; }
     }
 
     .slider-container {
@@ -194,13 +211,24 @@
     <div class="brand-logo">
       <span class="p-white">pocke</span><span class="p-orange">tool</span>
     </div>
-    <div class="nav-bar">
+    
+    <!-- Menu per Desktop -->
+    <div class="nav-bar-desktop">
       <div class="nav-item active" id="nav-0" onclick="scrollToSlide(0)">Progetti</div>
       <div class="nav-item" id="nav-1" onclick="scrollToSlide(1)">Notepad</div>
       <div class="nav-item" id="nav-2" onclick="scrollToSlide(2)">Manutenzione</div>
       <div class="nav-item" id="nav-3" onclick="scrollToSlide(3)">Tools</div>
       <div class="nav-item" id="nav-4" onclick="scrollToSlide(4)">Parametri</div>
     </div>
+
+    <!-- Menu a Tendina per Mobile -->
+    <select class="nav-select-mobile" id="nav-select" onchange="scrollToSlide(Number(this.value))">
+      <option value="0">📂 Progetti</option>
+      <option value="1">📝 Notepad</option>
+      <option value="2">🛠️ Manutenzione</option>
+      <option value="3">🔗 Tools</option>
+      <option value="4">📐 Parametri</option>
+    </select>
   </header>
 
   <div class="slider-container" id="slider" style="width: 100vw;">
@@ -527,11 +555,16 @@
     });
 
     function updateNavActiveState() {
+      // Sincronizza sia i bottoni desktop che il menu a tendina mobile
       for(let i = 0; i < totalSlides; i++) {
         const item = document.getElementById(`nav-${i}`);
         if(item) {
           item.classList.toggle('active', i === currentSlide);
         }
+      }
+      const mobileSelect = document.getElementById('nav-select');
+      if(mobileSelect) {
+        mobileSelect.value = currentSlide;
       }
     }
 
