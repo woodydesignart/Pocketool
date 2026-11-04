@@ -28,22 +28,20 @@
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 90px;
+      height: 70px;
       background: var(--card-bg);
       border-bottom: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       z-index: 1000;
-      padding: 6px 15px 0 15px;
+      padding: 0 15px;
     }
 
     .brand-logo {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
       letter-spacing: -0.5px;
-      margin-bottom: 8px;
       user-select: none;
     }
 
@@ -54,9 +52,7 @@
     .nav-bar-desktop {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 15px;
-      max-width: 100%;
     }
 
     .nav-item {
@@ -76,33 +72,73 @@
       border-bottom-color: var(--accent);
     }
 
-    /* Menu a Tendina Mobile */
-    .nav-select-mobile {
+    /* Pulsante Hamburger Mobile (3 linee) */
+    .hamburger-btn {
       display: none;
-      width: 100%;
-      max-width: 280px;
-      padding: 6px 10px;
-      background: #2a2a2a;
-      color: var(--accent);
-      font-weight: bold;
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      font-size: 0.9rem;
-      text-align: center;
-      outline: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 26px;
+      height: 20px;
+      padding: 0;
+      z-index: 1100;
     }
 
-    /* Switch da pulsanti a tendina per schermi mobile */
-    @media (max-width: 600px) {
+    .hamburger-btn span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* Menu a scomparsa Mobile */
+    .mobile-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      z-index: 1050;
+    }
+
+    .mobile-dropdown-menu.open {
+      display: flex;
+    }
+
+    .mobile-nav-item {
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--text-dim);
+      border-bottom: 1px solid #252525;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mobile-nav-item.active {
+      color: var(--accent);
+      background: #252525;
+    }
+
+    /* Regola per Mobile (Sotto i 768px per sicurezza su iPhone) */
+    @media (max-width: 768px) {
       .nav-bar-desktop { display: none; }
-      .nav-select-mobile { display: block; }
+      .hamburger-btn { display: flex; }
     }
 
     .slider-container {
       display: flex;
       width: 100vw;
       height: 100vh;
-      padding-top: 90px; 
+      padding-top: 70px; 
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
@@ -221,14 +257,21 @@
       <div class="nav-item" id="nav-4" onclick="scrollToSlide(4)">Parametri</div>
     </div>
 
-    <!-- Menu a Tendina per Mobile -->
-    <select class="nav-select-mobile" id="nav-select" onchange="scrollToSlide(Number(this.value))">
-      <option value="0">📂 Progetti</option>
-      <option value="1">📝 Notepad</option>
-      <option value="2">🛠️ Manutenzione</option>
-      <option value="3">🔗 Tools</option>
-      <option value="4">📐 Parametri</option>
-    </select>
+    <!-- Pulsante Hamburger Mobile (3 Linee) -->
+    <button class="hamburger-btn" id="hamburger-toggle" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Menu a scomparsa a tendina per Mobile -->
+    <div class="mobile-dropdown-menu" id="mobile-menu">
+      <div class="mobile-nav-item active" id="mob-nav-0" onclick="selectMobileSlide(0)">📂 Progetti</div>
+      <div class="mobile-nav-item" id="mob-nav-1" onclick="selectMobileSlide(1)">📝 Notepad</div>
+      <div class="mobile-nav-item" id="mob-nav-2" onclick="selectMobileSlide(2)">🛠️ Manutenzione</div>
+      <div class="mobile-nav-item" id="mob-nav-3" onclick="selectMobileSlide(3)">🔗 Tools</div>
+      <div class="mobile-nav-item" id="mob-nav-4" onclick="selectMobileSlide(4)">📐 Parametri</div>
+    </div>
   </header>
 
   <div class="slider-container" id="slider" style="width: 100vw;">
@@ -554,17 +597,28 @@
       }
     });
 
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('open');
+    }
+
+    function selectMobileSlide(index) {
+      toggleMobileMenu();
+      scrollToSlide(index);
+    }
+
     function updateNavActiveState() {
-      // Sincronizza sia i bottoni desktop che il menu a tendina mobile
+      // Sincronizza i bottoni desktop
       for(let i = 0; i < totalSlides; i++) {
         const item = document.getElementById(`nav-${i}`);
         if(item) {
           item.classList.toggle('active', i === currentSlide);
         }
-      }
-      const mobileSelect = document.getElementById('nav-select');
-      if(mobileSelect) {
-        mobileSelect.value = currentSlide;
+        // Sincronizza le voci del menu mobile a scomparsa
+        const mobItem = document.getElementById(`mob-nav-${i}`);
+        if(mobItem) {
+          mobItem.classList.toggle('active', i === currentSlide);
+        }
       }
     }
 
