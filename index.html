@@ -53,12 +53,13 @@
     .nav-bar {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 15px;
+      justify-content: flex-start;
+      gap: 12px;
       overflow-x: auto;
       max-width: 100%;
-      padding: 0 10px;
+      padding: 0 15px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
     .nav-bar::-webkit-scrollbar { display: none; }
 
@@ -66,12 +67,13 @@
       color: var(--text-dim);
       font-weight: bold;
       font-size: 0.85rem;
-      padding: 4px 6px;
+      padding: 4px 2px;
       border-bottom: 2px solid transparent;
       cursor: pointer;
       transition: all 0.2s ease;
       user-select: none;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .nav-item.active {
@@ -147,6 +149,14 @@
     }
     .note-card:hover, .project-card:hover {
       border-color: var(--accent);
+    }
+
+    .machine-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
     }
 
     .link-list { list-style: none; }
@@ -284,10 +294,8 @@
         <div class="main-content">
           <h2>Manutenzione Macchinari</h2>
           
-          <!-- Pulsante in prima posizione per aggiungere un nuovo macchinario personalizzato -->
           <button class="btn-main" id="add-machine-btn" onclick="toggleAddMachineForm()">+ Aggiungi Nuovo Macchinario</button>
 
-          <!-- Form di aggiunta macchinario -->
           <div id="add-machine-form" class="card" style="display:none;">
             <h3>Aggiungi Macchinario</h3>
             <input type="text" id="new-machine-name" placeholder="Nome Macchinario (es. Troncatrice, CNC Custom...)">
@@ -295,7 +303,6 @@
             <button type="button" onclick="hideAddMachineForm()" style="background:#444;">Annulla</button>
           </div>
 
-          <!-- Contenitore delle schede macchinari -->
           <div id="machines-container"></div>
         </div>
 
@@ -550,6 +557,18 @@
       maintenanceRecords = [];
     }
 
+    let expandedMachines = [];
+
+    function toggleMachineAccordion(slug) {
+      const idx = expandedMachines.indexOf(slug);
+      if(idx > -1) {
+        expandedMachines.splice(idx, 1);
+      } else {
+        expandedMachines.push(slug);
+      }
+      renderMaintenanceSection();
+    }
+
     function toggleAddMachineForm() {
       const form = document.getElementById('add-machine-form');
       if (form.style.display === 'none') {
@@ -577,6 +596,9 @@
 
       customMachines.push(name);
       localStorage.setItem('maker_custom_machines', JSON.stringify(customMachines));
+
+      expandedMachines.push(slugify(name));
+
       hideAddMachineForm();
       renderMaintenanceSection();
     }
@@ -593,21 +615,9 @@
       }
     }
 
-    function toggleAddEntryForm(machineName) {
-      const form = document.getElementById(`entry-form-${slugify(machineName)}`);
-      if(form.style.display === 'none') {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById(`entry-date-${slugify(machineName)}`).value = today;
-        document.getElementById(`entry-desc-${slugify(machineName)}`).value = '';
-        form.style.display = 'block';
-      } else {
-        form.style.display = 'none';
-      }
-    }
-
-    function addMaintRecord(machineName) {
-      const date = document.getElementById(`entry-date-${slugify(machineName)}`).value;
-      const desc = document.getElementById(`entry-desc-${slugify(machineName)}`).value.trim();
+    function addMaintRecord(machineName, slug) {
+      const date = document.getElementById(`entry-date-${slug}`).value;
+      const desc = document.getElementById(`entry-desc-${slug}`).value.trim();
 
       if(!date || !desc) return alert('Inserisci sia la data che la descrizione');
 
@@ -615,6 +625,9 @@
       maintenanceRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       localStorage.setItem('maker_maint_records', JSON.stringify(maintenanceRecords));
+      
+      if(!expandedMachines.includes(slug)) expandedMachines.push(slug);
+
       renderMaintenanceSection();
     }
 
@@ -638,11 +651,14 @@
       const allMachines = [...defaultMachines, ...customMachines];
 
       allMachines.forEach(mach => {
+        const slug = slugify(mach);
+        const isExpanded = expandedMachines.includes(slug);
         const isCustom = !defaultMachines.includes(mach);
         const machRecords = maintenanceRecords.filter(r => r.machine === mach);
 
         const card = document.createElement('div');
         card.className = 'card';
+        card.style.padding = '12px 15px';
 
         let recordsHtml = '';
         if(machRecords.length === 0) {
@@ -671,25 +687,32 @@
           recordsHtml += `</tbody></table>`;
         }
 
-        const slug = slugify(mach);
+        const today = new Date().toISOString().split('T')[0];
 
         card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 style="margin-bottom:0; color:var(--accent); font-size:1.1rem;">🛠️ ${mach}</h3>
-            <div>
-              <button type="button" onclick="toggleAddEntryForm('${mach}')" style="width:auto; background:#333; padding:4px 8px; font-size:0.8rem; margin-bottom:0;">+ Aggiungi Intervento</button>
-              ${isCustom ? `<button type="button" onclick="deleteCustomMachine('${mach}')" style="width:auto; background:none; border:none; color:#ff4d4d; padding:4px 6px; font-size:0.85rem; cursor:pointer;" title="Elimina Macchinario">🗑️</button>` : ''}
+          <div class="machine-header" onclick="toggleMachineAccordion('${slug}')">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.8rem; color:var(--text-dim); transform: rotate(${isExpanded ? '90deg' : '0deg'}); transition: transform 0.2s;">▶</span>
+              <h3 style="margin-bottom:0; color:var(--accent); font-size:1.05rem;">🛠️ ${mach}</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.75rem; color:var(--text-dim); background:#252525; padding:2px 8px; border-radius:10px;">${machRecords.length} interventi</span>
+              ${isCustom ? `<button type="button" onclick="event.stopPropagation(); deleteCustomMachine('${mach}')" style="width:auto; background:none; border:none; color:#ff4d4d; padding:2px 4px; font-size:0.85rem; cursor:pointer;" title="Elimina Macchinario">🗑️</button>` : ''}
             </div>
           </div>
 
-          <div id="entry-form-${slug}" style="display:none; background:#252525; padding:10px; border-radius:5px; margin-bottom:10px; border:1px solid #333;">
-            <label style="font-size:0.75rem; color:var(--text-dim);">Data Intervento:</label>
-            <input type="date" id="entry-date-${slug}">
-            <textarea id="entry-desc-${slug}" placeholder="Cosa hai fatto? (es. pulizia lenti, ingrassaggio guide, cambio ugello...)" rows="2"></textarea>
-            <button class="btn-main" onclick="addMaintRecord('${mach}')" style="margin-bottom:0;">Registra</button>
-          </div>
+          <div id="accordion-body-${slug}" style="display: ${isExpanded ? 'block' : 'none'}; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 12px;">
+            <div style="background:#252525; padding:10px; border-radius:5px; margin-bottom:12px; border:1px solid #333;">
+              <h4 style="font-size:0.85rem; margin-bottom:8px; color:#fff;">+ Aggiungi Nuovo Intervento</h4>
+              <label style="font-size:0.75rem; color:var(--text-dim);">Data Intervento:</label>
+              <input type="date" id="entry-date-${slug}" value="${today}">
+              <textarea id="entry-desc-${slug}" placeholder="Cosa hai fatto? (es. pulizia lenti, ingrassaggio guide, cambio ugello...)" rows="2"></textarea>
+              <button class="btn-main" onclick="addMaintRecord('${mach}', '${slug}')" style="margin-bottom:0;">Registra Intervento</button>
+            </div>
 
-          ${recordsHtml}
+            <h4 style="font-size:0.85rem; margin-bottom:8px; color:var(--text-dim);">Storico Interventi:</h4>
+            ${recordsHtml}
+          </div>
         `;
 
         container.appendChild(card);
