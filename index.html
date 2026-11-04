@@ -91,13 +91,12 @@
     }
     .slider-container::-webkit-scrollbar { display: none; }
 
-    /* Sezione di scorrimento universale ottimizzata per Android e iOS */
     .slide-section {
       flex: 0 0 100vw;
       width: 100vw;
       height: 100%;
       scroll-snap-align: start;
-      padding: 15px 15px 110px 15px; /* Ampio respiro inferiore per evitare tagli su qualsiasi Android/iPhone */
+      padding: 15px 15px 110px 15px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -138,15 +137,15 @@
 
     .mat-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 0.85rem; }
     .mat-table th, .mat-table td { border: 1px solid var(--border); padding: 8px; text-align: center; }
-    .mat-table th { background: #252525; color: var(--accent); font-size: 0.8rem; }
+    .mat-table th { background: #252525; color: var(--accent); font-size: 0.80rem; }
     .mat-table td:first-child, .mat-table th:first-child { text-align: left; }
     .mat-table input { margin-bottom: 0; }
 
-    .note-card {
+    .note-card, .maint-card, .project-card {
       cursor: pointer;
       transition: border-color 0.2s;
     }
-    .note-card:hover {
+    .note-card:hover, .maint-card:hover, .project-card:hover {
       border-color: var(--accent);
     }
 
@@ -156,15 +155,6 @@
       color: #4da6ff; text-decoration: none; flex: 1; overflow: hidden; text-overflow: ellipsis; font-size: 0.9rem; margin-right: 5px;
     }
 
-    .project-card {
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .project-card:hover {
-      border-color: var(--accent);
-    }
-
-    /* Footer perfettamente posizionato in coda */
     .maker-footer {
       text-align: center;
       padding: 20px 10px 15px 10px;
@@ -197,8 +187,9 @@
     <div class="nav-bar">
       <div class="nav-item active" id="nav-0" onclick="scrollToSlide(0)">Progetti</div>
       <div class="nav-item" id="nav-1" onclick="scrollToSlide(1)">Notepad</div>
-      <div class="nav-item" id="nav-2" onclick="scrollToSlide(2)">Tools</div>
-      <div class="nav-item" id="nav-3" onclick="scrollToSlide(3)">Parametri</div>
+      <div class="nav-item" id="nav-2" onclick="scrollToSlide(2)">Manutenzione</div>
+      <div class="nav-item" id="nav-3" onclick="scrollToSlide(3)">Tools</div>
+      <div class="nav-item" id="nav-4" onclick="scrollToSlide(4)">Parametri</div>
     </div>
   </header>
 
@@ -270,12 +261,8 @@
             <input type="text" id="active-note-title" placeholder="Titolo nota..." style="margin-bottom:8px;">
             <textarea id="active-note-content" placeholder="Scrivi una nota..." rows="3" style="resize:vertical; margin-bottom:8px;"></textarea>
             
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-main" onclick="saveQuickNote()" style="flex: 1; margin-bottom: 0;" title="Conferma Nota">✔ Conferma</button>
-              <button type="button" onclick="clearNoteEditor()" style="width: auto; background: #333; margin-bottom: 0;" title="Pulisci campi">✕</button>
-            </div>
+            <button class="btn-main" onclick="saveQuickNote()" style="margin-bottom: 0;" title="Conferma Nota">✔ Conferma Nota</button>
           </div>
-
 
           <div id="notes-container"></div>
         </div>
@@ -291,8 +278,54 @@
       </div>
     </div>
 
-    <!-- SEZIONE 3: TOOLS -->
+    <!-- SEZIONE 3: MANUTENZIONE -->
     <div class="slide-section" id="slide-2">
+      <div class="content-box">
+        <div class="main-content">
+          <h2>Manutenzione Macchinari</h2>
+          
+          <button class="btn-main" id="new-maint-btn" onclick="toggleMaintForm()">+ Registra Manutenzione</button>
+
+          <!-- Form Inserimento/Modifica Manutenzione -->
+          <div id="maint-form" class="card" style="display:none;">
+            <h3 id="maint-form-title">Nuovo Intervento</h3>
+            <input type="hidden" id="m-id" value="">
+            
+            <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 4px;">Macchinario:</label>
+            <select id="m-machine" onchange="checkMaintCustomMachine(this.value)">
+              <option value="Altro">Altro (Inserisci manualmente...)</option>
+              <option value="Stampante 3D">Stampante 3D</option>
+              <option value="Laser">Laser</option>
+            </select>
+            <input type="text" id="m-custom-machine" placeholder="Nome macchinario personalizzato..." style="display:block;">
+
+            <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 4px;">Data:</label>
+            <input type="date" id="m-date">
+
+            <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 4px;">Cosa è stato fatto / Intervento:</label>
+            <textarea id="m-desc" placeholder="Es. Sostituito ugello, pulizia ottiche, lubrificazione guide..." rows="3"></textarea>
+
+            <button class="btn-main" onclick="saveMaintenance()">Salva Intervento</button>
+            <button type="button" onclick="hideMaintForm()" style="background:#444;">Annulla</button>
+          </div>
+
+          <!-- Contenitore Storico Manutenzioni -->
+          <div id="maint-container"></div>
+        </div>
+
+        <div class="maker-footer">
+          <p>Pocketool è un progetto indipendente creato da un maker per i makers.</p>
+          <p>Se ti è utile, condividilo con altri appassionati!</p>
+          <a href="https://www.instagram.com/woodydesignart/" target="_blank">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @woodydesignart
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEZIONE 4: TOOLS -->
+    <div class="slide-section" id="slide-3">
       <div class="content-box">
         <div class="main-content">
           <h2>Tools & Risorse</h2>
@@ -328,13 +361,12 @@
       </div>
     </div>
 
-    <!-- SEZIONE 4: PARAMETRI -->
-    <div class="slide-section" id="slide-3">
+    <!-- SEZIONE 5: PARAMETRI -->
+    <div class="slide-section" id="slide-4">
       <div class="content-box">
         <div class="main-content">
           <h2>Parametri & Misure</h2>
           
-          <!-- Tabella Fori per Filettatura (Maschiatura) -->
           <h3 style="color: var(--accent); margin-top: 5px;">Fori per Filettatura (Maschi)</h3>
           <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px;">Diametro della punta da usare prima di passare il maschio filettato.</p>
           <div class="card" style="overflow-x: auto; padding: 10px;">
@@ -400,11 +432,9 @@
             </table>
           </div>
 
-          <!-- Schema vettoriale del dado -->
           <h3 style="color: var(--accent); margin-top: 15px;">Dadi Esagonali (Quote)</h3>
           <div class="card" style="text-align: center; padding: 10px;">
             <svg viewBox="0 0 320 155" style="width: 100%; max-width: 280px; height: auto;">
-              <!-- Sezione Laterale (m = altezza/spessore) -->
               <g transform="translate(40, 10)">
                 <path d="M 15 10 L 45 10 L 50 25 L 50 85 L 45 100 L 15 100 L 10 85 L 10 25 Z" fill="#1e1e1e" stroke="#ff6b00" stroke-width="2"/>
                 <line x1="20" y1="10" x2="20" y2="100" stroke="#a0a0a0" stroke-dasharray="4,4" stroke-width="1.5"/>
@@ -414,8 +444,6 @@
                 <line x1="10" y1="125" x2="50" y2="125" stroke="#fff" stroke-width="1"/>
                 <text x="27" y="145" fill="#ff6b00" font-size="14" font-weight="bold">m</text>
               </g>
-
-              <!-- Sezione Superiore/Esagono (S = chiave) -->
               <g transform="translate(190, 10)">
                 <polygon points="50,5 85,25 85,65 50,85 15,65 15,25" fill="#1e1e1e" stroke="#ff6b00" stroke-width="2"/>
                 <circle cx="50" cy="45" r="22" fill="none" stroke="#a0a0a0" stroke-width="1.5"/>
@@ -430,7 +458,6 @@
             </svg>
           </div>
 
-          <!-- Tabella Misure Dadi Esagonali (Senza M2.5) -->
           <div class="card" style="overflow-x: auto; padding: 10px;">
             <table class="mat-table">
               <thead>
@@ -450,78 +477,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><strong>M2</strong></td>
-                  <td>0.4 mm</td>
-                  <td>1.6 mm</td>
-                  <td>1.35 mm</td>
-                  <td>4 mm</td>
-                  <td>3.82 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M3</strong></td>
-                  <td>0.5 mm</td>
-                  <td>2.4 mm</td>
-                  <td>2.15 mm</td>
-                  <td>5.5 mm</td>
-                  <td>5.32 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M4</strong></td>
-                  <td>0.7 mm</td>
-                  <td>3.2 mm</td>
-                  <td>2.9 mm</td>
-                  <td>7 mm</td>
-                  <td>6.78 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M5</strong></td>
-                  <td>0.8 mm</td>
-                  <td>4 mm</td>
-                  <td>3.7 mm</td>
-                  <td>8 mm</td>
-                  <td>7.78 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M6</strong></td>
-                  <td>1 mm</td>
-                  <td>5 mm</td>
-                  <td>4.7 mm</td>
-                  <td>10 mm</td>
-                  <td>9.78 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M7</strong></td>
-                  <td>1 mm</td>
-                  <td>5.5 mm</td>
-                  <td>5.2 mm</td>
-                  <td>11 mm</td>
-                  <td>10.73 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M8</strong></td>
-                  <td>1.25 mm</td>
-                  <td>6.5 mm</td>
-                  <td>6.14 mm</td>
-                  <td>13 mm</td>
-                  <td>12.73 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M10</strong></td>
-                  <td>1.5 mm</td>
-                  <td>8 mm</td>
-                  <td>7.64 mm</td>
-                  <td>17 mm</td>
-                  <td>16.73 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M12</strong></td>
-                  <td>1.75 mm</td>
-                  <td>10 mm</td>
-                  <td>9.64 mm</td>
-                  <td>19 mm</td>
-                  <td>18.67 mm</td>
-                </tr>
+                <tr><td><strong>M2</strong></td><td>0.4 mm</td><td>1.6 mm</td><td>1.35 mm</td><td>4 mm</td><td>3.82 mm</td></tr>
+                <tr><td><strong>M3</strong></td><td>0.5 mm</td><td>2.4 mm</td><td>2.15 mm</td><td>5.5 mm</td><td>5.32 mm</td></tr>
+                <tr><td><strong>M4</strong></td><td>0.7 mm</td><td>3.2 mm</td><td>2.9 mm</td><td>7 mm</td><td>6.78 mm</td></tr>
+                <tr><td><strong>M5</strong></td><td>0.8 mm</td><td>4 mm</td><td>3.7 mm</td><td>8 mm</td><td>7.78 mm</td></tr>
+                <tr><td><strong>M6</strong></td><td>1 mm</td><td>5 mm</td><td>4.7 mm</td><td>10 mm</td><td>9.78 mm</td></tr>
+                <tr><td><strong>M7</strong></td><td>1 mm</td><td>5.5 mm</td><td>5.2 mm</td><td>11 mm</td><td>10.73 mm</td></tr>
+                <tr><td><strong>M8</strong></td><td>1.25 mm</td><td>6.5 mm</td><td>6.14 mm</td><td>13 mm</td><td>12.73 mm</td></tr>
+                <tr><td><strong>M10</strong></td><td>1.5 mm</td><td>8 mm</td><td>7.64 mm</td><td>17 mm</td><td>16.73 mm</td></tr>
+                <tr><td><strong>M12</strong></td><td>1.75 mm</td><td>10 mm</td><td>9.64 mm</td><td>19 mm</td><td>18.67 mm</td></tr>
               </tbody>
             </table>
           </div>
@@ -541,9 +505,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // 📌 LINK PREDEFINITI CON DESCRIZIONE
-    // ==========================================
     const defaultTools = [
       { id: 1, title: "Makerworld", url: "https://makerworld.com/en", cat: "Stampa 3D", desc: "Modelli 3D e stampa cloud", default: true },
       { id: 2, title: "Printables", url: "https://www.printables.com", cat: "Stampa 3D", desc: "Community e modelli per stampa 3D", default: true },
@@ -562,17 +523,18 @@
 
     const slider = document.getElementById('slider');
     let currentSlide = 0;
+    const totalSlides = 5; // Aggiornato a 5 sezioni
 
     slider.addEventListener('scroll', () => {
       const index = Math.round(slider.scrollLeft / window.innerWidth);
-      if (index !== currentSlide && index >= 0 && index < 4) {
+      if (index !== currentSlide && index >= 0 && index < totalSlides) {
         currentSlide = index;
         updateNavActiveState();
       }
     });
 
     function updateNavActiveState() {
-      for(let i = 0; i < 4; i++) {
+      for(let i = 0; i < totalSlides; i++) {
         const item = document.getElementById(`nav-${i}`);
         if(item) {
           item.classList.toggle('active', i === currentSlide);
@@ -584,6 +546,138 @@
       currentSlide = index;
       slider.scrollTo({ left: window.innerWidth * index, behavior: 'smooth' });
       updateNavActiveState();
+    }
+
+    // --- MANUTENZIONE ---
+    let maintenanceList = [];
+    try {
+      maintenanceList = JSON.parse(localStorage.getItem('maker_maintenance')) || [];
+    } catch(e) {
+      maintenanceList = [];
+    }
+
+    function toggleMaintForm() {
+      const form = document.getElementById('maint-form');
+      if (form.style.display === 'none') {
+        document.getElementById('maint-form-title').innerText = "Nuovo Intervento";
+        document.getElementById('m-id').value = '';
+        document.getElementById('m-machine').value = 'Altro'; // Di default imposta "Altro" in cima per la digitazione manuale
+        document.getElementById('m-custom-machine').value = '';
+        document.getElementById('m-custom-machine').style.display = 'block';
+        
+        // Imposta la data odierna di default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('m-date').value = today;
+        document.getElementById('m-desc').value = '';
+
+        form.style.display = 'block';
+        document.getElementById('new-maint-btn').style.display = 'none';
+      } else {
+        hideMaintForm();
+      }
+    }
+
+    function hideMaintForm() {
+      document.getElementById('maint-form').style.display = 'none';
+      document.getElementById('new-maint-btn').style.display = 'block';
+    }
+
+    function checkMaintCustomMachine(val) {
+      document.getElementById('m-custom-machine').style.display = val === 'Altro' ? 'block' : 'none';
+    }
+
+    function saveMaintenance() {
+      const id = document.getElementById('m-id').value;
+      let machine = document.getElementById('m-machine').value;
+      const customMachine = document.getElementById('m-custom-machine').value;
+      const date = document.getElementById('m-date').value;
+      const desc = document.getElementById('m-desc').value;
+
+      if(machine === 'Altro') {
+        if(!customMachine) return alert('Inserisci il nome del macchinario');
+        machine = customMachine;
+      }
+
+      if(!date || !desc) return alert('Inserisci data e descrizione dell\'intervento');
+
+      if (id) {
+        maintenanceList = maintenanceList.map(m => m.id == id ? { id: Number(id), machine, date, desc } : m);
+      } else {
+        maintenanceList.push({ id: Date.now(), machine, date, desc });
+      }
+
+      // Ordina per data decrescente (dalla più recente)
+      maintenanceList.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      localStorage.setItem('maker_maintenance', JSON.stringify(maintenanceList));
+      hideMaintForm();
+      renderMaintenance();
+    }
+
+    function editMaintenance(id) {
+      const m = maintenanceList.find(item => item.id == id);
+      if(!m) return;
+
+      document.getElementById('maint-form-title').innerText = "Modifica Intervento";
+      document.getElementById('m-id').value = m.id;
+      
+      const selectMach = document.getElementById('m-machine');
+      const standardMachs = ['Stampante 3D', 'Laser'];
+      
+      if(standardMachs.includes(m.machine)) {
+        selectMach.value = m.machine;
+        document.getElementById('m-custom-machine').style.display = 'none';
+        document.getElementById('m-custom-machine').value = '';
+      } else {
+        selectMach.value = 'Altro';
+        document.getElementById('m-custom-machine').style.display = 'block';
+        document.getElementById('m-custom-machine').value = m.machine;
+      }
+
+      document.getElementById('m-date').value = m.date;
+      document.getElementById('m-desc').value = m.desc;
+
+      document.getElementById('maint-form').style.display = 'block';
+      document.getElementById('new-maint-btn').style.display = 'none';
+      document.getElementById('slide-2').scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteMaintenance(id) {
+      if(confirm('Vuoi rimuovere questo record di manutenzione?')) {
+        maintenanceList = maintenanceList.filter(m => m.id !== id);
+        localStorage.setItem('maker_maintenance', JSON.stringify(maintenanceList));
+        renderMaintenance();
+        hideMaintForm();
+      }
+    }
+
+    function renderMaintenance() {
+      const container = document.getElementById('maint-container');
+      if(!container) return;
+      container.innerHTML = '';
+
+      if(maintenanceList.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-dim); text-align:center; margin-top:20px;">Nessuna manutenzione registrata.</p>';
+        return;
+      }
+
+      maintenanceList.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card maint-card';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <h3 style="margin-bottom:0; color:var(--accent);">${m.machine}</h3>
+            <span style="font-size:0.75rem; color:var(--text-dim); background:#252525; padding:2px 6px; border-radius:4px;">📅 ${m.date}</span>
+          </div>
+          <p style="color:var(--text); font-size:0.85rem; white-space: pre-wrap; margin-top:6px; margin-bottom:8px;">${m.desc}</p>
+          <div style="display:flex; justify-content:flex-end; gap:6px;">
+            <button type="button" onclick="event.stopPropagation(); editMaintenance(${m.id})" style="width:auto; background:#333; padding:3px 8px; font-size:0.75rem;">Modifica</button>
+            <button type="button" onclick="event.stopPropagation(); deleteMaintenance(${m.id})" style="width:auto; background:none; border:none; color:#ff4d4d; padding:3px; font-size:0.85rem; cursor:pointer;">🗑️</button>
+          </div>
+        `;
+        card.onclick = () => editMaintenance(m.id);
+        container.appendChild(card);
+      });
     }
 
     // --- PROGETTI ---
@@ -738,7 +832,7 @@
       }
     }
 
-    // --- NOTEPAD (BOX RAPIDO + LISTA) ---
+    // --- NOTEPAD ---
     let notesList = [];
     try {
       notesList = JSON.parse(localStorage.getItem('maker_notes_list')) || [];
@@ -750,7 +844,6 @@
       document.getElementById('active-note-id').value = '';
       document.getElementById('active-note-title').value = '';
       document.getElementById('active-note-content').value = '';
-      document.getElementById('slide-1').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function saveQuickNote() {
@@ -819,7 +912,7 @@
       });
     }
 
-    // --- TOOLS E LINK ---
+    // --- TOOLS ---
     let userTools = [];
     try {
       userTools = JSON.parse(localStorage.getItem('maker_user_tools')) || [];
@@ -894,7 +987,6 @@
 
       categories.forEach(cat => {
         const catTools = allTools.filter(t => t.cat === cat);
-        
         const card = document.createElement('div');
         card.className = 'card';
         
@@ -917,9 +1009,10 @@
       });
     }
 
-    // Inizializzazione completa all'avvio
+    // Inizializzazione completa
     renderProjects();
     renderNotes();
+    renderMaintenance();
     renderTools();
     updateCategoryDropdown();
     updateNavActiveState();
