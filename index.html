@@ -128,7 +128,7 @@
       background: #252525;
     }
 
-    /* Regola per Mobile (Sotto i 768px per sicurezza su iPhone) */
+    /* Regola per Mobile (Sotto i 768px) */
     @media (max-width: 768px) {
       .nav-bar-desktop { display: none; }
       .hamburger-btn { display: flex; }
@@ -608,13 +608,11 @@
     }
 
     function updateNavActiveState() {
-      // Sincronizza i bottoni desktop
       for(let i = 0; i < totalSlides; i++) {
         const item = document.getElementById(`nav-${i}`);
         if(item) {
           item.classList.toggle('active', i === currentSlide);
         }
-        // Sincronizza le voci del menu mobile a scomparsa
         const mobItem = document.getElementById(`mob-nav-${i}`);
         if(mobItem) {
           mobItem.classList.toggle('active', i === currentSlide);
@@ -1143,8 +1141,20 @@
     updateCategoryDropdown();
     updateNavActiveState();
 
+    // Gestione Service Worker con autoricaricamento per gli aggiornamenti automatici
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then((reg) => {
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                window.location.reload();
+              }
+            });
+          });
+        });
+      });
     }
   </script>
 </body>
