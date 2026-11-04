@@ -248,7 +248,7 @@
       <span class="p-white">pocke</span><span class="p-orange">tool</span>
     </div>
     
-    <!-- Menu per Desktop -->
+    <!-- Menu Desktop -->
     <div class="nav-bar-desktop">
       <div class="nav-item active" id="nav-0" onclick="scrollToSlide(0)">Progetti</div>
       <div class="nav-item" id="nav-1" onclick="scrollToSlide(1)">Notepad</div>
@@ -257,14 +257,14 @@
       <div class="nav-item" id="nav-4" onclick="scrollToSlide(4)">Parametri</div>
     </div>
 
-    <!-- Pulsante Hamburger Mobile (3 Linee) -->
+    <!-- Pulsante Hamburger Mobile -->
     <button class="hamburger-btn" id="hamburger-toggle" onclick="toggleMobileMenu()">
       <span></span>
       <span></span>
       <span></span>
     </button>
 
-    <!-- Menu a scomparsa a tendina per Mobile -->
+    <!-- Menu a tendina Mobile -->
     <div class="mobile-dropdown-menu" id="mobile-menu">
       <div class="mobile-nav-item active" id="mob-nav-0" onclick="selectMobileSlide(0)">📂 Progetti</div>
       <div class="mobile-nav-item" id="mob-nav-1" onclick="selectMobileSlide(1)">📝 Notepad</div>
@@ -274,7 +274,7 @@
     </div>
   </header>
 
-  <div class="slider-container" id="slider" style="width: 100vw;">
+  <div class="slider-container" id="slider">
 
     <!-- SEZIONE 1: PROGETTI -->
     <div class="slide-section" id="slide-0">
@@ -323,10 +323,7 @@
         <div class="maker-footer">
           <p>Pocketool è un progetto indipendente creato da un maker per i makers.</p>
           <p>Se ti è utile, condividilo con altri appassionati!</p>
-          <a href="https://www.instagram.com/woodydesignart/" target="_blank">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @woodydesignart
-          </a>
+          <a href="https://www.instagram.com/woodydesignart/" target="_blank">@woodydesignart</a>
         </div>
       </div>
     </div>
@@ -342,7 +339,7 @@
             <input type="text" id="active-note-title" placeholder="Titolo nota..." style="margin-bottom:8px;">
             <textarea id="active-note-content" placeholder="Scrivi una nota..." rows="3" style="resize:vertical; margin-bottom:8px;"></textarea>
             
-            <button class="btn-main" onclick="saveQuickNote()" style="margin-bottom: 0;" title="Conferma Nota">✔ Conferma Nota</button>
+            <button class="btn-main" onclick="saveQuickNote()" style="margin-bottom: 0;">✔ Conferma Nota</button>
           </div>
 
           <div id="notes-container"></div>
@@ -350,11 +347,7 @@
 
         <div class="maker-footer">
           <p>Pocketool è un progetto indipendente creato da un maker per i makers.</p>
-          <p>Se ti è utile, condividilo con altri appassionati!</p>
-          <a href="https://www.instagram.com/woodydesignart/" target="_blank">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @woodydesignart
-          </a>
+          <a href="https://www.instagram.com/woodydesignart/" target="_blank">@woodydesignart</a>
         </div>
       </div>
     </div>
@@ -369,7 +362,7 @@
 
           <div id="add-machine-form" class="card" style="display:none;">
             <h3>Aggiungi Macchinario</h3>
-            <input type="text" id="new-machine-name" placeholder="Nome Macchinario (es. Troncatrice, CNC Custom...)">
+            <input type="text" id="new-machine-name" placeholder="Nome Macchinario">
             <button class="btn-main" onclick="addNewMachine()">Salva Macchinario</button>
             <button type="button" onclick="hideAddMachineForm()" style="background:#444;">Annulla</button>
           </div>
@@ -379,11 +372,7 @@
 
         <div class="maker-footer">
           <p>Pocketool è un progetto indipendente creato da un maker per i makers.</p>
-          <p>Se ti è utile, condividilo con altri appassionati!</p>
-          <a href="https://www.instagram.com/woodydesignart/" target="_blank">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @woodydesignart
-          </a>
+          <a href="https://www.instagram.com/woodydesignart/" target="_blank">@woodydesignart</a>
         </div>
       </div>
     </div>
@@ -396,9 +385,9 @@
 
           <div class="card">
             <h3>Aggiungi nuovo link</h3>
-            <input type="text" id="custom-link-title" placeholder="Nome Tool (es. Calcolatore Viti)">
+            <input type="text" id="custom-link-title" placeholder="Nome Tool">
             <input type="url" id="custom-link-url" placeholder="https://...">
-            <input type="text" id="custom-link-desc" placeholder="Breve descrizione (es. Calcola lunghezze)">
+            <input type="text" id="custom-link-desc" placeholder="Breve descrizione">
             
             <select id="custom-link-cat" onchange="checkToolCustomCategory(this.value)">
               <option value="Stampa 3D">Stampa 3D</option>
@@ -416,11 +405,7 @@
 
         <div class="maker-footer">
           <p>Pocketool è un progetto indipendente creato da un maker per i makers.</p>
-          <p>Se ti è utile, condividilo con altri appassionati!</p>
-          <a href="https://www.instagram.com/woodydesignart/" target="_blank">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @woodydesignart
-          </a>
+          <a href="https://www.instagram.com/woodydesignart/" target="_blank">@woodydesignart</a>
         </div>
       </div>
     </div>
@@ -432,124 +417,25 @@
           <h2>Parametri & Misure</h2>
           
           <h3 style="color: var(--accent); margin-top: 5px;">Fori per Filettatura (Maschi)</h3>
-          <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px;">Diametro della punta da usare prima di passare il maschio filettato.</p>
           <div class="card" style="overflow-x: auto; padding: 10px;">
             <table class="mat-table">
               <thead>
                 <tr>
                   <th>Filetto</th>
                   <th>Passo (P)</th>
-                  <th>Punta per Foro Filetto</th>
-                  <th>Foro Passante (Largo)</th>
+                  <th>Punta per Foro</th>
+                  <th>Foro Passante</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><strong>M2</strong></td>
-                  <td>0.40 mm</td>
-                  <td><strong style="color:var(--accent)">1.6 mm</strong></td>
-                  <td>2.2 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M3</strong></td>
-                  <td>0.50 mm</td>
-                  <td><strong style="color:var(--accent)">2.5 mm</strong></td>
-                  <td>3.2 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M4</strong></td>
-                  <td>0.70 mm</td>
-                  <td><strong style="color:var(--accent)">3.3 mm</strong></td>
-                  <td>4.3 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M5</strong></td>
-                  <td>0.80 mm</td>
-                  <td><strong style="color:var(--accent)">4.2 mm</strong></td>
-                  <td>5.3 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M6</strong></td>
-                  <td>1.00 mm</td>
-                  <td><strong style="color:var(--accent)">5.0 mm</strong></td>
-                  <td>6.4 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M8</strong></td>
-                  <td>1.25 mm</td>
-                  <td><strong style="color:var(--accent)">6.8 mm</strong></td>
-                  <td>8.4 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M10</strong></td>
-                  <td>1.50 mm</td>
-                  <td><strong style="color:var(--accent)">8.5 mm</strong></td>
-                  <td>10.5 mm</td>
-                </tr>
-                <tr>
-                  <td><strong>M12</strong></td>
-                  <td>1.75 mm</td>
-                  <td><strong style="color:var(--accent)">10.2 mm</strong></td>
-                  <td>13.0 mm</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3 style="color: var(--accent); margin-top: 15px;">Dadi Esagonali (Quote)</h3>
-          <div class="card" style="text-align: center; padding: 10px;">
-            <svg viewBox="0 0 320 155" style="width: 100%; max-width: 280px; height: auto;">
-              <g transform="translate(40, 10)">
-                <path d="M 15 10 L 45 10 L 50 25 L 50 85 L 45 100 L 15 100 L 10 85 L 10 25 Z" fill="#1e1e1e" stroke="#ff6b00" stroke-width="2"/>
-                <line x1="20" y1="10" x2="20" y2="100" stroke="#a0a0a0" stroke-dasharray="4,4" stroke-width="1.5"/>
-                <line x1="40" y1="10" x2="40" y2="100" stroke="#a0a0a0" stroke-dasharray="4,4" stroke-width="1.5"/>
-                <line x1="10" y1="110" x2="10" y2="130" stroke="#fff" stroke-width="1"/>
-                <line x1="50" y1="110" x2="50" y2="130" stroke="#fff" stroke-width="1"/>
-                <line x1="10" y1="125" x2="50" y2="125" stroke="#fff" stroke-width="1"/>
-                <text x="27" y="145" fill="#ff6b00" font-size="14" font-weight="bold">m</text>
-              </g>
-              <g transform="translate(190, 10)">
-                <polygon points="50,5 85,25 85,65 50,85 15,65 15,25" fill="#1e1e1e" stroke="#ff6b00" stroke-width="2"/>
-                <circle cx="50" cy="45" r="22" fill="none" stroke="#a0a0a0" stroke-width="1.5"/>
-                <circle cx="50" cy="45" r="16" fill="none" stroke="#a0a0a0" stroke-dasharray="3,3" stroke-width="1"/>
-                <line x1="50" y1="-5" x2="50" y2="95" stroke="#444" stroke-dasharray="5,3" stroke-width="1"/>
-                <line x1="-5" y1="45" x2="105" y2="45" stroke="#444" stroke-dasharray="5,3" stroke-width="1"/>
-                <line x1="15" y1="95" x2="15" y2="110" stroke="#fff" stroke-width="1"/>
-                <line x1="85" y1="95" x2="85" y2="110" stroke="#fff" stroke-width="1"/>
-                <line x1="15" y1="105" x2="85" y2="105" stroke="#fff" stroke-width="1"/>
-                <text x="47" y="127" fill="#ff6b00" font-size="14" font-weight="bold">S</text>
-              </g>
-            </svg>
-          </div>
-
-          <div class="card" style="overflow-x: auto; padding: 10px;">
-            <table class="mat-table">
-              <thead>
-                <tr>
-                  <th>Filetto (D)</th>
-                  <th>Passo (P)</th>
-                  <th colspan="2">Altezza (m)</th>
-                  <th colspan="2">Chiave (S)</th>
-                </tr>
-                <tr style="font-size: 0.75rem; color: var(--text-dim);">
-                  <th>Misura</th>
-                  <th>Pitch</th>
-                  <th>max</th>
-                  <th>min</th>
-                  <th>max</th>
-                  <th>min</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td><strong>M2</strong></td><td>0.4 mm</td><td>1.6 mm</td><td>1.35 mm</td><td>4 mm</td><td>3.82 mm</td></tr>
-                <tr><td><strong>M3</strong></td><td>0.5 mm</td><td>2.4 mm</td><td>2.15 mm</td><td>5.5 mm</td><td>5.32 mm</td></tr>
-                <tr><td><strong>M4</strong></td><td>0.7 mm</td><td>3.2 mm</td><td>2.9 mm</td><td>7 mm</td><td>6.78 mm</td></tr>
-                <tr><td><strong>M5</strong></td><td>0.8 mm</td><td>4 mm</td><td>3.7 mm</td><td>8 mm</td><td>7.78 mm</td></tr>
-                <tr><td><strong>M6</strong></td><td>1 mm</td><td>5 mm</td><td>4.7 mm</td><td>10 mm</td><td>9.78 mm</td></tr>
-                <tr><td><strong>M7</strong></td><td>1 mm</td><td>5.5 mm</td><td>5.2 mm</td><td>11 mm</td><td>10.73 mm</td></tr>
-                <tr><td><strong>M8</strong></td><td>1.25 mm</td><td>6.5 mm</td><td>6.14 mm</td><td>13 mm</td><td>12.73 mm</td></tr>
-                <tr><td><strong>M10</strong></td><td>1.5 mm</td><td>8 mm</td><td>7.64 mm</td><td>17 mm</td><td>16.73 mm</td></tr>
-                <tr><td><strong>M12</strong></td><td>1.75 mm</td><td>10 mm</td><td>9.64 mm</td><td>19 mm</td><td>18.67 mm</td></tr>
+                <tr><td><strong>M2</strong></td><td>0.40 mm</td><td><strong style="color:var(--accent)">1.6 mm</strong></td><td>2.2 mm</td></tr>
+                <tr><td><strong>M3</strong></td><td>0.50 mm</td><td><strong style="color:var(--accent)">2.5 mm</strong></td><td>3.2 mm</td></tr>
+                <tr><td><strong>M4</strong></td><td>0.70 mm</td><td><strong style="color:var(--accent)">3.3 mm</strong></td><td>4.3 mm</td></tr>
+                <tr><td><strong>M5</strong></td><td>0.80 mm</td><td><strong style="color:var(--accent)">4.2 mm</strong></td><td>5.3 mm</td></tr>
+                <tr><td><strong>M6</strong></td><td>1.00 mm</td><td><strong style="color:var(--accent)">5.0 mm</strong></td><td>6.4 mm</td></tr>
+                <tr><td><strong>M8</strong></td><td>1.25 mm</td><td><strong style="color:var(--accent)">6.8 mm</strong></td><td>8.4 mm</td></tr>
+                <tr><td><strong>M10</strong></td><td>1.50 mm</td><td><strong style="color:var(--accent)">8.5 mm</strong></td><td>10.5 mm</td></tr>
+                <tr><td><strong>M12</strong></td><td>1.75 mm</td><td><strong style="color:var(--accent)">10.2 mm</strong></td><td>13.0 mm</td></tr>
               </tbody>
             </table>
           </div>
@@ -557,11 +443,7 @@
 
         <div class="maker-footer">
           <p>Pocketool è un progetto indipendente creato da un maker per i makers.</p>
-          <p>Se ti è utile, condividilo con altri appassionati!</p>
-          <a href="https://www.instagram.com/woodydesignart/" target="_blank">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @woodydesignart
-          </a>
+          <a href="https://www.instagram.com/woodydesignart/" target="_blank">@woodydesignart</a>
         </div>
       </div>
     </div>
@@ -589,12 +471,18 @@
     let currentSlide = 0;
     const totalSlides = 5;
 
+    // Throttle per evitare eventi di scroll multipli concorrenti
+    let isScrolling = false;
     slider.addEventListener('scroll', () => {
-      const index = Math.round(slider.scrollLeft / window.innerWidth);
-      if (index !== currentSlide && index >= 0 && index < totalSlides) {
-        currentSlide = index;
-        updateNavActiveState();
-      }
+      if(isScrolling) return;
+      isScrolling = setTimeout(() => {
+        const index = Math.round(slider.scrollLeft / window.innerWidth);
+        if (index !== currentSlide && index >= 0 && index < totalSlides) {
+          currentSlide = index;
+          updateNavActiveState();
+        }
+        isScrolling = null;
+      }, 50);
     });
 
     function toggleMobileMenu() {
@@ -610,13 +498,9 @@
     function updateNavActiveState() {
       for(let i = 0; i < totalSlides; i++) {
         const item = document.getElementById(`nav-${i}`);
-        if(item) {
-          item.classList.toggle('active', i === currentSlide);
-        }
+        if(item) item.classList.toggle('active', i === currentSlide);
         const mobItem = document.getElementById(`mob-nav-${i}`);
-        if(mobItem) {
-          mobItem.classList.toggle('active', i === currentSlide);
-        }
+        if(mobItem) mobItem.classList.toggle('active', i === currentSlide);
       }
     }
 
@@ -626,20 +510,23 @@
       updateNavActiveState();
     }
 
-    // --- MANUTENZIONE MACCHINARI ---
-    const defaultMachines = ["Stampante 3D", "Laser", "CNC"];
+    // --- DATI E LOCALSTORAGE ---
     let customMachines = [];
-    try {
-      customMachines = JSON.parse(localStorage.getItem('maker_custom_machines')) || [];
-    } catch(e) {
-      customMachines = [];
-    }
-
     let maintenanceRecords = [];
-    try {
-      maintenanceRecords = JSON.parse(localStorage.getItem('maker_maint_records')) || [];
-    } catch(e) {
-      maintenanceRecords = [];
+    let projects = [];
+    let notesList = [];
+    let userTools = [];
+
+    function loadAppData() {
+      try {
+        customMachines = JSON.parse(localStorage.getItem('maker_custom_machines')) || [];
+        maintenanceRecords = JSON.parse(localStorage.getItem('maker_maint_records')) || [];
+        projects = JSON.parse(localStorage.getItem('maker_projects')) || [];
+        notesList = JSON.parse(localStorage.getItem('maker_notes_list')) || [];
+        userTools = JSON.parse(localStorage.getItem('maker_user_tools')) || [];
+      } catch(e) {
+        console.error("Errore nel caricamento dei dati locali", e);
+      }
     }
 
     let expandedMachines = [];
@@ -681,7 +568,6 @@
 
       customMachines.push(name);
       localStorage.setItem('maker_custom_machines', JSON.stringify(customMachines));
-
       expandedMachines.push(slugify(name));
 
       hideAddMachineForm();
@@ -710,7 +596,6 @@
       maintenanceRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       localStorage.setItem('maker_maint_records', JSON.stringify(maintenanceRecords));
-      
       if(!expandedMachines.includes(slug)) expandedMachines.push(slug);
 
       renderMaintenanceSection();
@@ -723,6 +608,8 @@
         renderMaintenanceSection();
       }
     }
+
+    const defaultMachines = ["Stampante 3D", "Laser", "CNC"];
 
     function slugify(text) {
       return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
@@ -791,7 +678,7 @@
               <h4 style="font-size:0.85rem; margin-bottom:8px; color:#fff;">+ Aggiungi Nuovo Intervento</h4>
               <label style="font-size:0.75rem; color:var(--text-dim);">Data Intervento:</label>
               <input type="date" id="entry-date-${slug}" value="${today}">
-              <textarea id="entry-desc-${slug}" placeholder="Cosa hai fatto? (es. pulizia lenti, ingrassaggio guide, cambio ugello...)" rows="2"></textarea>
+              <textarea id="entry-desc-${slug}" placeholder="Cosa hai fatto?..." rows="2"></textarea>
               <button class="btn-main" onclick="addMaintRecord('${mach}', '${slug}')" style="margin-bottom:0;">Registra Intervento</button>
             </div>
 
@@ -805,13 +692,6 @@
     }
 
     // --- PROGETTI ---
-    let projects = [];
-    try {
-      projects = JSON.parse(localStorage.getItem('maker_projects')) || [];
-    } catch(e) {
-      projects = [];
-    }
-
     function toggleProjectForm() {
       const form = document.getElementById('project-form');
       if (form.style.display === 'none') {
@@ -843,7 +723,7 @@
       const tbody = document.getElementById('materials-list');
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><input type="text" class="m-name" value="${name}" placeholder="Es. Tavola Abete"></td>
+        <td><input type="text" class="m-name" value="${name}" placeholder="Materiale"></td>
         <td><input type="number" class="m-cost" value="${cost}" placeholder="0.00"></td>
         <td><button type="button" onclick="this.closest('tr').remove()" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">✕</button></td>
       `;
@@ -957,13 +837,6 @@
     }
 
     // --- NOTEPAD ---
-    let notesList = [];
-    try {
-      notesList = JSON.parse(localStorage.getItem('maker_notes_list')) || [];
-    } catch(e) {
-      notesList = [];
-    }
-
     function clearNoteEditor() {
       document.getElementById('active-note-id').value = '';
       document.getElementById('active-note-title').value = '';
@@ -1037,13 +910,6 @@
     }
 
     // --- TOOLS ---
-    let userTools = [];
-    try {
-      userTools = JSON.parse(localStorage.getItem('maker_user_tools')) || [];
-    } catch(e) {
-      userTools = [];
-    }
-
     function checkToolCustomCategory(val) {
       document.getElementById('custom-link-custom-cat').style.display = val === 'Altro' ? 'block' : 'none';
     }
@@ -1133,29 +999,14 @@
       });
     }
 
-    // Inizializzazione completa
+    // Inizializzazione
+    loadAppData();
     renderProjects();
     renderNotes();
     renderMaintenanceSection();
     renderTools();
     updateCategoryDropdown();
     updateNavActiveState();
-
-    // Gestione Service Worker con autoricaricamento per gli aggiornamenti automatici
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').then((reg) => {
-          reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                window.location.reload();
-              }
-            });
-          });
-        });
-      });
-    }
   </script>
 </body>
 </html>
